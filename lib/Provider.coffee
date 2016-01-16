@@ -56,14 +56,22 @@ class Provider extends AbstractProvider
         isInOptionalList = false
 
         for param, index in info.parameters
+            isCurrentArgument = false
+
+            if activeArgumentNumber == index
+                isCurrentArgument = true
+
+            else if activeArgumentNumber > index and param.isVariadic
+                isCurrentArgument = true
+
             body += '['   if param.isOptional and not isInOptionalList
             body += ', '  if index != 0
-            body += '<strong>' if activeArgumentNumber == index
+            body += '<strong>' if isCurrentArgument
             body += (param.type + ' ') if param.type
             body += '&'   if param.isReference
             body += '$' + param.name
             body += '...' if param.isVariadic
-            body += '</strong>' if activeArgumentNumber == index
+            body += '</strong>' if isCurrentArgument
             body += ']'  if param.isOptional and index == (info.parameters.length - 1)
 
             isInOptionalList = param.isOptional
