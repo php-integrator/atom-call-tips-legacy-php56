@@ -114,7 +114,7 @@ class AbstractProvider
      * @param {string}     text
     ###
     showCallTip: (editor, bufferPosition, text) ->
-        @callTipMarker = editor.markBufferRange(new Range(bufferPosition, bufferPosition), {
+        @callTipMarker = editor.markBufferPosition(bufferPosition, {
             persistent : false
             invalidate : 'touch'
         })
