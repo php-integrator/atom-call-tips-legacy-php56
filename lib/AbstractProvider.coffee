@@ -16,6 +16,14 @@ class AbstractProvider
     ###
     callTipMarker: null
 
+    onDidChangeCursorPositionSubscriptions: null
+
+    ###*
+     * Constructor.
+    ###
+    constructor: () ->
+        @onDidChangeCursorPositionSubscriptions = []
+
     ###*
      * Initializes this provider.
      *
@@ -79,19 +87,26 @@ class AbstractProvider
     deactivate: () ->
         @removeCallTip()
 
+        for subscription in @onDidChangeCursorPositionSubscriptions
+            subscription.dispose()
+
+        @onDidChangeCursorPositionSubscriptions = []
+
     ###*
      * Registers the necessary event handlers.
      *
      * @param {TextEditor} editor TextEditor to register events to.
     ###
     registerEvents: (editor) ->
-        editor.onDidChangeCursorPosition (event) =>
+        subscription = editor.onDidChangeCursorPosition (event) =>
             # Only execute for the first cursor.
             cursors = editor.getCursors()
 
             return if event.cursor != cursors[0]
 
             @onChangeCursorPosition(editor, event.newBufferPosition)
+
+        @onDidChangeCursorPositionSubscriptions.push(subscription)
 
     ###*
      * Shows the call tip at the specified location and editor with the specified text.
