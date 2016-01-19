@@ -24,7 +24,11 @@ class Provider extends AbstractProvider
         return if not callStack
 
         if callStack.length > 0
-            type = @service.parser.getResultingTypeFromCallStack(editor, invocationInfo.bufferPosition, callStack)
+            try
+                type = @service.parser.getResultingTypeFromCallStack(editor, invocationInfo.bufferPosition, callStack)
+
+            catch error
+                return # Can happen when a class type is used that doesn't exist (i.e. an use statement is missing).
 
             method = @service.getClassMethod(type, methodName)
 
