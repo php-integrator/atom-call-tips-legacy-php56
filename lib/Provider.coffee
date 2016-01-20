@@ -30,6 +30,8 @@ class Provider extends AbstractProvider
             catch error
                 return # Can happen when a class type is used that doesn't exist (i.e. an use statement is missing).
 
+            return if not type
+
             method = @service.getClassMethod(type, methodName)
 
         else
