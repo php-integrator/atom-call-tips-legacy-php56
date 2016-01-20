@@ -36,6 +36,7 @@ class Provider extends AbstractProvider
                 if methodName of classInfo.methods
                     callTipText = @getFunctionCallTip(classInfo.methods[methodName], invocationInfo.argumentIndex)
 
+                    @removeCallTip()
                     @showCallTip(editor, newBufferPosition, callTipText)
 
         else
@@ -43,6 +44,7 @@ class Provider extends AbstractProvider
                 if methodName of globalFunctions
                     callTipText = @getFunctionCallTip(globalFunctions[methodName], invocationInfo.argumentIndex)
 
+                    @removeCallTip()
                     @showCallTip(editor, newBufferPosition, callTipText)
 
     ###*
