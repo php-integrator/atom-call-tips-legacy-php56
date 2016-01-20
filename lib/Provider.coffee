@@ -32,18 +32,18 @@ class Provider extends AbstractProvider
 
             return if not type
 
-            method = @service.getClassMethod(type, methodName)
+            @service.getClassInfo(type, true).then (classInfo) =>
+                if methodName of classInfo.methods
+                    callTipText = @getFunctionCallTip(classInfo.methods[methodName], invocationInfo.argumentIndex)
+
+                    @showCallTip(editor, newBufferPosition, callTipText)
 
         else
-            globalFunctions = @service.getGlobalFunctions()
+            @service.getGlobalFunctions(true).then (globalFunctions) =>
+                if methodName of globalFunctions
+                    callTipText = @getFunctionCallTip(globalFunctions[methodName], invocationInfo.argumentIndex)
 
-            if methodName of globalFunctions
-                method = globalFunctions[methodName]
-
-        if method?
-            callTipText = @getFunctionCallTip(method, invocationInfo.argumentIndex)
-
-            @showCallTip(editor, newBufferPosition, callTipText)
+                    @showCallTip(editor, newBufferPosition, callTipText)
 
     ###*
      * Builds the call tip for a PHP function or method.
