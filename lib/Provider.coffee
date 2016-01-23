@@ -19,11 +19,15 @@ class Provider extends AbstractProvider
         callStack = invocationInfo.callStack
 
         method = null
-        methodName = callStack.pop()
+        itemName = callStack.pop()
 
         return if not callStack
 
-        if callStack.length > 0
+        if callStack.length > 0 or invocationInfo.type == 'instantiation'
+            if invocationInfo.type == 'instantiation'
+                callStack.push(itemName)
+                itemName = '__construct'
+
             try
                 type = @service.parser.getResultingTypeFromCallStack(editor, invocationInfo.bufferPosition, callStack)
 
@@ -33,16 +37,16 @@ class Provider extends AbstractProvider
             return if not type
 
             @service.getClassInfo(type, true).then (classInfo) =>
-                if methodName of classInfo.methods
-                    callTipText = @getFunctionCallTip(classInfo.methods[methodName], invocationInfo.argumentIndex)
+                if itemName of classInfo.methods
+                    callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
 
                     @removeCallTip()
                     @showCallTip(editor, newBufferPosition, callTipText)
 
         else
             @service.getGlobalFunctions(true).then (globalFunctions) =>
-                if methodName of globalFunctions
-                    callTipText = @getFunctionCallTip(globalFunctions[methodName], invocationInfo.argumentIndex)
+                if itemName of globalFunctions
+                    callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
 
                     @removeCallTip()
                     @showCallTip(editor, newBufferPosition, callTipText)
