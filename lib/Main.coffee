@@ -1,6 +1,6 @@
 module.exports =
     ###*
-     * List of tooltip providers.
+     * List of call tip providers.
     ###
     providers: []
 
