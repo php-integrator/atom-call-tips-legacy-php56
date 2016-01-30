@@ -14,6 +14,14 @@ class AbstractProvider
     ###
     callTipMarker: null
 
+    ###*
+     * Handle used for managing the timeout to use before triggering the cursor changed event handler.
+    ###
+    timeoutHandle: null
+
+    ###*
+     * Keeps track of event subscriptions to the cursor position changed event per editor.
+    ###
     onDidChangeCursorPositionSubscriptions: null
 
     ###*
@@ -102,7 +110,13 @@ class AbstractProvider
 
             return if event.cursor != cursors[0]
 
-            @onChangeCursorPosition(editor, event.newBufferPosition)
+            if @timeoutHandle
+                clearTimeout(@timeoutHandle)
+                @timeoutHandle = null
+
+            @timeoutHandle = setTimeout ( =>
+                @onChangeCursorPosition(editor, event.newBufferPosition)
+            ), 50
 
         @onDidChangeCursorPositionSubscriptions.push(subscription)
 
