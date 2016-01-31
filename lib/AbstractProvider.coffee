@@ -111,6 +111,11 @@ class AbstractProvider
             return if event.cursor != cursors[0]
 
             if @timeoutHandle?
+                # Putting this here will ensure the popover is removed when the user currently has a call tip active and
+                # then starts rapidly moving the cursor around. Otherwise, it will stick around for a while until the
+                # user stops moving the cursor.
+                @removeCallTip()
+                
                 clearTimeout(@timeoutHandle)
                 @timeoutHandle = null
 
