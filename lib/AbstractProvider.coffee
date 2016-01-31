@@ -110,7 +110,7 @@ class AbstractProvider
 
             return if event.cursor != cursors[0]
 
-            if @timeoutHandle
+            if @timeoutHandle?
                 clearTimeout(@timeoutHandle)
                 @timeoutHandle = null
 
