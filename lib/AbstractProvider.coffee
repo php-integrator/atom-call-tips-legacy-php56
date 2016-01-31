@@ -116,7 +116,7 @@ class AbstractProvider
 
             @timeoutHandle = setTimeout ( =>
                 @onChangeCursorPosition(editor, event.newBufferPosition)
-            ), 25
+            ), 30
 
         @onDidChangeCursorPositionSubscriptions.push(subscription)
 
