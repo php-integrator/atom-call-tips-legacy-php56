@@ -115,6 +115,7 @@ class AbstractProvider
                 @timeoutHandle = null
 
             @timeoutHandle = setTimeout ( =>
+                @timeoutHandle = null
                 @onChangeCursorPosition(editor, event.newBufferPosition)
             ), 30
 
