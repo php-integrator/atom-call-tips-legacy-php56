@@ -23,6 +23,9 @@ class Provider extends AbstractProvider
 
         return if not callStack
 
+        failureHandler = () ->
+            return # I do absolutely nothing!
+
         if callStack.length > 0 or invocationInfo.type == 'instantiation'
             if invocationInfo.type == 'instantiation'
                 callStack.push(itemName)
@@ -36,20 +39,24 @@ class Provider extends AbstractProvider
 
             return if not type
 
-            @service.getClassInfo(type, true).then (classInfo) =>
+            successHandler = (classInfo) =>
                 if itemName of classInfo.methods
                     callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
 
                     @removeCallTip()
                     @showCallTip(editor, newBufferPosition, callTipText)
 
+            @service.getClassInfo(type, true).then(successHandler, failureHandler)
+
         else
-            @service.getGlobalFunctions(true).then (globalFunctions) =>
+            successHandler = (globalFunctions) =>
                 if itemName of globalFunctions
                     callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
 
                     @removeCallTip()
                     @showCallTip(editor, newBufferPosition, callTipText)
+
+            @service.getGlobalFunctions(true).then(successHandler, failureHandler)
 
     ###*
      * Builds the call tip for a PHP function or method.
