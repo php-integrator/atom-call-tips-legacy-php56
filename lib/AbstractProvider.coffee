@@ -115,7 +115,7 @@ class AbstractProvider
                 # then starts rapidly moving the cursor around. Otherwise, it will stick around for a while until the
                 # user stops moving the cursor.
                 @removeCallTip()
-                
+
                 clearTimeout(@timeoutHandle)
                 @timeoutHandle = null
 
@@ -140,16 +140,15 @@ class AbstractProvider
         })
 
         rootDiv = document.createElement('div')
-        rootDiv.className = 'tooltip bottom fade php-integrator-popover'
+        rootDiv.className = 'tooltip bottom fade'
         rootDiv.style.opacity = 100
         rootDiv.style.fontSize = '1.0621em'
         rootDiv.style.maxWidth = 'none'
 
         innerDiv = document.createElement('div')
-        innerDiv.className = 'tooltip-inner'
+        innerDiv.className = 'tooltip-inner php-integrator-popover-wrapper'
 
         textDiv = document.createElement('div')
-        textDiv.className = 'php-integrator-popover-wrapper'
         textDiv.innerHTML = text
 
         innerDiv.appendChild(textDiv)
@@ -157,6 +156,7 @@ class AbstractProvider
 
         editor.decorateMarker(@callTipMarker, {
             type: 'overlay'
+            class: 'php-integrator-popover'
             item: rootDiv
         })
 
