@@ -143,10 +143,9 @@ class AbstractProvider
         rootDiv.className = 'tooltip bottom fade'
         rootDiv.style.opacity = 100
         rootDiv.style.fontSize = '1.0621em'
-        rootDiv.style.maxWidth = 'none'
 
         innerDiv = document.createElement('div')
-        innerDiv.className = 'tooltip-inner php-integrator-popover-wrapper'
+        innerDiv.className = 'tooltip-inner php-integrator-call-tip-wrapper'
 
         textDiv = document.createElement('div')
         textDiv.innerHTML = text
@@ -156,7 +155,7 @@ class AbstractProvider
 
         editor.decorateMarker(@callTipMarker, {
             type: 'overlay'
-            class: 'php-integrator-popover'
+            class: 'php-integrator-call-tip'
             item: rootDiv
         })
 
