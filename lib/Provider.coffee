@@ -31,32 +31,35 @@ class Provider extends AbstractProvider
                 callStack.push(itemName)
                 itemName = '__construct'
 
-            try
-                type = @service.parser.getResultingTypeFromCallStack(editor, invocationInfo.bufferPosition, callStack)
+            offset = editor.getBuffer().characterIndexForPosition(invocationInfo.bufferPosition)
 
-            catch error
-                return # Can happen when a class type is used that doesn't exist (i.e. an use statement is missing).
+            deduceTypeSuccessHandler = (type) =>
+                return if not type
 
-            return if not type
+                successHandler = (classInfo) =>
+                    if itemName of classInfo.methods
+                        callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
 
-            successHandler = (classInfo) =>
-                if itemName of classInfo.methods
-                    callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
+                        @removeCallTip()
+                        @showCallTip(editor, newBufferPosition, callTipText)
 
-                    @removeCallTip()
-                    @showCallTip(editor, newBufferPosition, callTipText)
+                @service.getClassInfo(type, true).then(successHandler, failureHandler)
 
-            @service.getClassInfo(type, true).then(successHandler, failureHandler)
+            @service.deduceType(callStack, editor.getPath(), editor.getBuffer().getText(), offset, true).then(
+                deduceTypeSuccessHandler,
+                failureHandler
+            )
 
         else
-            successHandler = (globalFunctions) =>
-                if itemName of globalFunctions
-                    callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
+          successHandler = (globalFunctions) =>
+              if itemName of globalFunctions
+                  callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
 
-                    @removeCallTip()
-                    @showCallTip(editor, newBufferPosition, callTipText)
+                  @removeCallTip()
+                  @showCallTip(editor, newBufferPosition, callTipText)
 
-            @service.getGlobalFunctions(true).then(successHandler, failureHandler)
+          @service.getGlobalFunctions(true).then(successHandler, failureHandler)
+
 
     ###*
      * Builds the call tip for a PHP function or method.
