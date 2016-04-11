@@ -12,54 +12,54 @@ class Provider extends AbstractProvider
     onChangeCursorPosition: (editor, newBufferPosition) ->
         @removeCallTip()
 
-        invocationInfo = @service.getInvocationInfoAt(editor, newBufferPosition)
-
-        return if not invocationInfo?
-
-        callStack = invocationInfo.callStack
-
-        method = null
-        itemName = callStack.pop()
-
-        return if not callStack
-
         failureHandler = () ->
             return # I do absolutely nothing!
 
-        if callStack.length > 0 or invocationInfo.type == 'instantiation'
-            if invocationInfo.type == 'instantiation'
-                callStack.push(itemName)
-                itemName = '__construct'
+        getInvocationInfoHandler = (invocationInfo) =>
+            return if not invocationInfo?
 
-            offset = editor.getBuffer().characterIndexForPosition(invocationInfo.bufferPosition)
+            callStack = invocationInfo.callStack
 
-            deduceTypeSuccessHandler = (type) =>
-                return if not type
+            method = null
+            itemName = callStack.pop()
 
-                successHandler = (classInfo) =>
-                    if itemName of classInfo.methods
-                        callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
+            return if not callStack
 
-                        @removeCallTip()
-                        @showCallTip(editor, newBufferPosition, callTipText)
+            if callStack.length > 0 or invocationInfo.type == 'instantiation'
+                if invocationInfo.type == 'instantiation'
+                    callStack.push(itemName)
+                    itemName = '__construct'
 
-                @service.getClassInfo(type, true).then(successHandler, failureHandler)
+                offset = editor.getBuffer().characterIndexForPosition(invocationInfo.bufferPosition)
 
-            @service.deduceType(callStack, editor.getPath(), editor.getBuffer().getText(), offset, true).then(
-                deduceTypeSuccessHandler,
-                failureHandler
-            )
+                deduceTypeSuccessHandler = (type) =>
+                    return if not type
 
-        else
-          successHandler = (globalFunctions) =>
-              if itemName of globalFunctions
-                  callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
+                    successHandler = (classInfo) =>
+                        if itemName of classInfo.methods
+                            callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
 
-                  @removeCallTip()
-                  @showCallTip(editor, newBufferPosition, callTipText)
+                            @removeCallTip()
+                            @showCallTip(editor, newBufferPosition, callTipText)
 
-          @service.getGlobalFunctions(true).then(successHandler, failureHandler)
+                    @service.getClassInfo(type, true).then(successHandler, failureHandler)
 
+                @service.deduceType(callStack, editor.getPath(), editor.getBuffer().getText(), offset, true).then(
+                    deduceTypeSuccessHandler,
+                    failureHandler
+                )
+
+            else
+              successHandler = (globalFunctions) =>
+                  if itemName of globalFunctions
+                      callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
+
+                      @removeCallTip()
+                      @showCallTip(editor, newBufferPosition, callTipText)
+
+              @service.getGlobalFunctions(true).then(successHandler, failureHandler)
+
+        @service.getInvocationInfoAt(editor, newBufferPosition, true).then(getInvocationInfoHandler, failureHandler)
 
     ###*
      * Builds the call tip for a PHP function or method.
