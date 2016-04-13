@@ -42,9 +42,9 @@ class Provider extends AbstractProvider
                             @removeCallTip()
                             @showCallTip(editor, newBufferPosition, callTipText)
 
-                    @service.getClassInfo(type, true).then(successHandler, failureHandler)
+                    @service.getClassInfo(type).then(successHandler, failureHandler)
 
-                @service.deduceType(callStack, editor.getPath(), editor.getBuffer().getText(), offset, true).then(
+                @service.deduceType(callStack, editor.getPath(), editor.getBuffer().getText(), offset).then(
                     deduceTypeSuccessHandler,
                     failureHandler
                 )
@@ -57,9 +57,9 @@ class Provider extends AbstractProvider
                       @removeCallTip()
                       @showCallTip(editor, newBufferPosition, callTipText)
 
-              @service.getGlobalFunctions(true).then(successHandler, failureHandler)
+              @service.getGlobalFunctions().then(successHandler, failureHandler)
 
-        @service.getInvocationInfoAt(editor, newBufferPosition, true).then(getInvocationInfoHandler, failureHandler)
+        @service.getInvocationInfoAt(editor, newBufferPosition).then(getInvocationInfoHandler, failureHandler)
 
     ###*
      * Builds the call tip for a PHP function or method.
