@@ -1,3 +1,6 @@
+## 0.2.4 (base 0.9.0)
+* Updated to use the most recent version of the base service.
+
 ## 0.2.3 (base 0.8.0)
 * Call tips became a bit more asynchronous, improving responsiveness.
 
