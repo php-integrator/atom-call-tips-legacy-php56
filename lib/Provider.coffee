@@ -89,7 +89,7 @@ class Provider extends AbstractProvider
             body += '['   if param.isOptional and not isInOptionalList
             body += ', '  if index != 0
             body += '<strong>' if isCurrentArgument
-            body += (param.type + ' ') if param.type
+            body += (param.types.map((type) -> return type.type).join('|') + ' ') if param.types.length > 0
             body += '&'   if param.isReference
             body += '$' + param.name
             body += '...' if param.isVariadic
