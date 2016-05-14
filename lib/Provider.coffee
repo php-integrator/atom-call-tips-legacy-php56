@@ -32,20 +32,24 @@ class Provider extends AbstractProvider
 
                 offset = editor.getBuffer().characterIndexForPosition(invocationInfo.bufferPosition)
 
-                deduceTypeSuccessHandler = (type) =>
-                    return if not type
+                deduceTypesSuccessHandler = (types) =>
+                    successHandler = (classInfoArray) =>
+                        for classInfo in classInfoArray
+                            if itemName of classInfo.methods
+                                callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
 
-                    successHandler = (classInfo) =>
-                        if itemName of classInfo.methods
-                            callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
+                                @removeCallTip()
+                                @showCallTip(editor, newBufferPosition, callTipText)
 
-                            @removeCallTip()
-                            @showCallTip(editor, newBufferPosition, callTipText)
+                    getClassInfoPromises = []
 
-                    @service.getClassInfo(type).then(successHandler, failureHandler)
+                    for type in types
+                        getClassInfoPromises.push @service.getClassInfo(type)
 
-                @service.deduceType(callStack, editor.getPath(), editor.getBuffer().getText(), offset).then(
-                    deduceTypeSuccessHandler,
+                    return Promise.all(getClassInfoPromises).then(successHandler, failureHandler)
+
+                @service.deduceTypes(callStack, editor.getPath(), editor.getBuffer().getText(), offset).then(
+                    deduceTypesSuccessHandler,
                     failureHandler
                 )
 
