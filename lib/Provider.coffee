@@ -97,6 +97,7 @@ class Provider extends AbstractProvider
             body += '&'   if param.isReference
             body += '$' + param.name
             body += '...' if param.isVariadic
+            body += ' = ' + param.defaultValue if param.defaultValue
             body += '</strong>' if isCurrentArgument
             body += ']'  if param.isOptional and index == (info.parameters.length - 1)
 

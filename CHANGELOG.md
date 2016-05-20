@@ -1,5 +1,5 @@
 ## 0.2.5 (base 0.10.0)
-* Updated to use the most recent version of the base service.
+* Call tips will now display the default value for parameters.
 
 ## 0.2.4 (base 0.9.0)
 * Updated to use the most recent version of the base service.
