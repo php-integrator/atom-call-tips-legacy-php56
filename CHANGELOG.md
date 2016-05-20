@@ -1,5 +1,6 @@
 ## 0.2.5 (base 0.10.0)
 * Call tips will now display the default value for parameters.
+* The ellipsis for variadic parameters is now shown up front instead of at the back, consistent with PHP's syntax.
 
 ## 0.2.4 (base 0.9.0)
 * Updated to use the most recent version of the base service.
