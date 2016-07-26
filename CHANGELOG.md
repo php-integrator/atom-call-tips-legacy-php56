@@ -1,3 +1,6 @@
+## 1.0.1
+* Fix the version specifier not being compatible with newer versions of the base service.
+
 ## 1.0.0 (base 1.0.0)
 * Call tips will now display the default value for parameters.
 * The ellipsis for variadic parameters is now shown up front instead of at the back, consistent with PHP's syntax.
