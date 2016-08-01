@@ -18,7 +18,7 @@ class Provider extends AbstractProvider
         getInvocationInfoHandler = (invocationInfo) =>
             return if not invocationInfo?
 
-            callStack = invocationInfo.callStack
+            callStack = invocationInfo.callStack.slice()
 
             method = null
             itemName = callStack.pop()
@@ -30,7 +30,7 @@ class Provider extends AbstractProvider
                     callStack.push(itemName)
                     itemName = '__construct'
 
-                offset = editor.getBuffer().characterIndexForPosition(invocationInfo.bufferPosition)
+                offset = @service.getCharacterOffsetFromByteOffset(invocationInfo.offset, editor.getBuffer().getText())
 
                 deduceTypesSuccessHandler = (types) =>
                     successHandler = (classInfoArray) =>
