@@ -35,9 +35,17 @@ class Provider extends AbstractProvider
                 deduceTypesSuccessHandler = (types) =>
                     successHandler = (classInfoArray) =>
                         for classInfo in classInfoArray
+                            callTipText = null
+
                             if itemName of classInfo.methods
                                 callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
 
+                            else if itemName == '__construct'
+                                # Not all classes have an explicit constructor, if none is specified, a public one
+                                # exists, so pretend there are no parameters.
+                                callTipText = @getFunctionCallTip({parameters : []}, 0)
+
+                            if callTipText?
                                 @removeCallTip()
                                 @showCallTip(editor, newBufferPosition, callTipText)
 
