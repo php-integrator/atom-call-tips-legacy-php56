@@ -63,6 +63,9 @@ class Provider extends AbstractProvider
 
             else
               successHandler = (globalFunctions) =>
+                  if itemName[0] != '\\'
+                      itemName = '\\' + itemName
+
                   if itemName of globalFunctions
                       callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
 
