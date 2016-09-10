@@ -1,3 +1,6 @@
+## 1.1.1
+* Rename the package and repository.
+
 ## 1.1.0 (base 1.2.0)
 * Fix no call tips being shown after the new keyword for classes that have an implicit constructor.
 
