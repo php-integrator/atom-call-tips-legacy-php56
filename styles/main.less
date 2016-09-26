@@ -8,12 +8,15 @@
 .php-integrator-call-tip {
     width: 50%;
     max-width: 50%;
-    pointer-events: none;
 
     // Keep call tips above linter errors, as they are more relevant to getting the solution implemented and linter
     // messages can always be made visible via the bottom panel or by simply moving the cursor somewhere else to hide
     // the call tip.
     z-index: 10;
+
+    .tooltip {
+        pointer-events: none;
+    }
 
     .php-integrator-call-tip-inactive-argument {
         opacity: 0.50;
