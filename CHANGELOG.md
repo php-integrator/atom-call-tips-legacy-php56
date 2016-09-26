@@ -1,5 +1,5 @@
 ## 1.2.0 (base 1.3.0)
-* Updated to use the most recent version of the base service.
+* Call tips should now always display above linter errors.
 
 ## 1.1.1
 * Rename the package and repository.
