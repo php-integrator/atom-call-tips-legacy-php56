@@ -103,7 +103,7 @@ class Provider extends AbstractProvider
 
             # body += '['   if param.isOptional and not isInOptionalList
             body += ', '  if index != 0
-            body += '<span style="opacity: 0.50;">' if not isCurrentArgument
+            body += '<span class="php-integrator-call-tip-inactive-argument">' if not isCurrentArgument
 
             if param.types.length > 0
                 body += '<em>'
@@ -118,7 +118,7 @@ class Provider extends AbstractProvider
 
             if param.defaultValue
                 body += ' '
-                body += '<span class="keystroke" style="margin: 0;">'
+                body += '<span class="keystroke php-integrator-call-tip-default-value">'
                 body += param.defaultValue
                 body += '</span>'
 
