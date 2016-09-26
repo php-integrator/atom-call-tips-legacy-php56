@@ -1,5 +1,6 @@
 ## 1.2.0 (base 1.3.0)
 * Call tips should now always display above linter errors.
+* The visual appearance of call tips has been improved. There is now a much clearer distinction between its various components (i.e. types, names and default values).
 
 ## 1.1.1
 * Rename the package and repository.

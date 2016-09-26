@@ -90,7 +90,7 @@ class Provider extends AbstractProvider
 
         body = ''
 
-        isInOptionalList = false
+        # isInOptionalList = false
 
         for param, index in info.parameters
             isCurrentArgument = false
@@ -101,17 +101,30 @@ class Provider extends AbstractProvider
             else if activeArgumentNumber > index and param.isVariadic
                 isCurrentArgument = true
 
-            body += '['   if param.isOptional and not isInOptionalList
+            # body += '['   if param.isOptional and not isInOptionalList
             body += ', '  if index != 0
-            body += '<strong>' if isCurrentArgument
-            body += (param.types.map((type) -> return type.type).join('|') + ' ') if param.types.length > 0
+            body += '<span style="opacity: 0.50;">' if not isCurrentArgument
+
+            if param.types.length > 0
+                body += '<em>'
+                body += (param.types.map((type) -> return type.type).join('|') + ' ')
+                body += '</em>'
+
+            body += '<strong>'
             body += '...' if param.isVariadic
             body += '&'   if param.isReference
             body += '$' + param.name
-            body += ' = ' + param.defaultValue if param.defaultValue
-            body += '</strong>' if isCurrentArgument
-            body += ']'  if param.isOptional and index == (info.parameters.length - 1)
+            body += '</strong>'
 
-            isInOptionalList = param.isOptional
+            if param.defaultValue
+                body += ' '
+                body += '<span class="keystroke" style="margin: 0;">'
+                body += param.defaultValue
+                body += '</span>'
+
+            body += '</span>' if not isCurrentArgument
+            # body += ']'  if param.isOptional and index == (info.parameters.length - 1)
+
+            # isInOptionalList = param.isOptional
 
         return body
