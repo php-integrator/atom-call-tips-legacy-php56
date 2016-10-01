@@ -135,7 +135,6 @@ class AbstractProvider
     ###
     showCallTip: (editor, bufferPosition, text) ->
         @callTipMarker = editor.markBufferPosition(bufferPosition, {
-            persistent : false
             invalidate : 'touch'
         })
 
