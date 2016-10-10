@@ -107,7 +107,7 @@ class Provider extends AbstractProvider
 
             if param.types.length > 0
                 body += '<em>'
-                body += (param.types.map((type) -> return type.type).join('|') + ' ')
+                body += (param.types.map((type) -> return type.type).join('|') + '&nbsp;')
                 body += '</em>'
 
             body += '<strong>'
@@ -117,7 +117,7 @@ class Provider extends AbstractProvider
             body += '</strong>'
 
             if param.defaultValue
-                body += ' '
+                body += '&nbsp;'
                 body += '<span class="keystroke php-integrator-call-tip-default-value">'
                 body += param.defaultValue
                 body += '</span>'
