@@ -74,7 +74,22 @@ class Provider extends AbstractProvider
 
               @service.getGlobalFunctions().then(successHandler, failureHandler)
 
-        @service.getInvocationInfoAt(editor, newBufferPosition).then(getInvocationInfoHandler, failureHandler)
+        if @isValidBufferPosition(editor, newBufferPosition)
+            @service.getInvocationInfoAt(editor, newBufferPosition).then(getInvocationInfoHandler, failureHandler)
+
+    ###*
+     * @param {TextEditor}  editor
+     * @param {Point}       bufferPosition
+     *
+     * @return {Boolean}
+    ###
+    isValidBufferPosition: (editor, bufferPosition) ->
+        scopeChain = editor.scopeDescriptorForBufferPosition(bufferPosition).getScopeChain()
+
+        if scopeChain.indexOf('.comment') != -1
+            return false
+
+        return true
 
     ###*
      * Builds the call tip for a PHP function or method.
