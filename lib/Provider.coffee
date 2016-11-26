@@ -18,17 +18,23 @@ class Provider extends AbstractProvider
         getInvocationInfoHandler = (invocationInfo) =>
             return if not invocationInfo?
 
-            callStack = invocationInfo.callStack.slice()
+            if invocationInfo.type == 'function'
+                successHandler = (globalFunctions) =>
+                    itemName = invocationInfo.name
 
-            method = null
-            itemName = callStack.pop()
+                    if itemName[0] != '\\'
+                        itemName = '\\' + itemName
 
-            return if not callStack
+                    if itemName of globalFunctions
+                        callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
 
-            if callStack.length > 0 or invocationInfo.type == 'instantiation'
-                if invocationInfo.type == 'instantiation'
-                    callStack.push(itemName)
-                    itemName = '__construct'
+                        @removeCallTip()
+                        @showCallTip(editor, newBufferPosition, callTipText)
+
+                return @service.getGlobalFunctions().then(successHandler, failureHandler)
+
+            else if invocationInfo.type == 'method'
+                methodName = invocationInfo.name
 
                 offset = @service.getCharacterOffsetFromByteOffset(invocationInfo.offset, editor.getBuffer().getText())
 
@@ -37,13 +43,8 @@ class Provider extends AbstractProvider
                         for classInfo in classInfoArray
                             callTipText = null
 
-                            if itemName of classInfo.methods
-                                callTipText = @getFunctionCallTip(classInfo.methods[itemName], invocationInfo.argumentIndex)
-
-                            else if itemName == '__construct'
-                                # Not all classes have an explicit constructor, if none is specified, a public one
-                                # exists, so pretend there are no parameters.
-                                callTipText = @getFunctionCallTip({parameters : []}, 0)
+                            if invocationInfo.name of classInfo.methods
+                                callTipText = @getFunctionCallTip(classInfo.methods[invocationInfo.name], invocationInfo.argumentIndex)
 
                             if callTipText?
                                 @removeCallTip()
@@ -56,23 +57,34 @@ class Provider extends AbstractProvider
 
                     return Promise.all(getClassInfoPromises).then(successHandler, failureHandler)
 
-                @service.deduceTypes(callStack, editor.getPath(), editor.getBuffer().getText(), offset).then(
+                return @service.deduceTypes(invocationInfo.expression, editor.getPath(), editor.getBuffer().getText(), offset, true).then(
                     deduceTypesSuccessHandler,
                     failureHandler
                 )
 
-            else
-              successHandler = (globalFunctions) =>
-                  if itemName[0] != '\\'
-                      itemName = '\\' + itemName
+            else if invocationInfo.type == 'instantiation'
+                resolveTypeAtSuccessHandler = (fqcn) =>
+                    successHandler = (classInfo) =>
+                        callTipText = null
 
-                  if itemName of globalFunctions
-                      callTipText = @getFunctionCallTip(globalFunctions[itemName], invocationInfo.argumentIndex)
+                        if '__construct' of classInfo.methods
+                            callTipText = @getFunctionCallTip(classInfo.methods['__construct'], invocationInfo.argumentIndex)
 
-                      @removeCallTip()
-                      @showCallTip(editor, newBufferPosition, callTipText)
+                        else
+                            # Not all classes have an explicit constructor, if none is specified, a public one
+                            # exists, so pretend there are no parameters.
+                            callTipText = @getFunctionCallTip({parameters : []}, 0)
 
-              @service.getGlobalFunctions().then(successHandler, failureHandler)
+                        if callTipText?
+                            @removeCallTip()
+                            @showCallTip(editor, newBufferPosition, callTipText)
+
+                    return @service.getClassInfo(fqcn).then(successHandler, failureHandler)
+
+                return @service.resolveTypeAt(editor, newBufferPosition, invocationInfo.expression, 'classlike').then(
+                    resolveTypeAtSuccessHandler,
+                    failureHandler
+                )
 
         if @isValidBufferPosition(editor, newBufferPosition)
             @service.getInvocationInfoAt(editor, newBufferPosition).then(getInvocationInfoHandler, failureHandler)
