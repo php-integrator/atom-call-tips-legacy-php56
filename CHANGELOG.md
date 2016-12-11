@@ -1,4 +1,4 @@
-## 1.2.0 (base 1.3.0)
+## 1.2.0 (base 2.0.0)
 * Call tips should now always display above linter errors.
 * A single parameter signature should no longer break over multiple lines.
 * Call tips will no longer trigger inside comments, which should improve responsiveness whilst typing them.
