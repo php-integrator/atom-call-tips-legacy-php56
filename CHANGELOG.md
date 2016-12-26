@@ -1,3 +1,6 @@
+## 1.2.1
+* Add a workaround to prevent call tips from displaying over autocompletion (thanks to [@Talv](https://github.com/Talv)).
+
 ## 1.2.0 (base 2.0.0)
 * Call tips should now always display above linter errors.
 * A single parameter signature should no longer break over multiple lines.
