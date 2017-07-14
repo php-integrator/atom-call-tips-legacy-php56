@@ -1,7 +1,7 @@
 {
   "name": "php-integrator-call-tips-legacy-php56",
   "main": "./lib/Main",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Shows call tips with parameter information in your PHP source code.",
   "repository": "php-integrator/atom-call-tips-legacy-php56",
   "license": "GPL-3.0",
