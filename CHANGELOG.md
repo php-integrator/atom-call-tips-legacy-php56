@@ -1,3 +1,6 @@
+## 1.2.2
+* Rename to legacy version.
+
 ## 1.2.1
 * Add a workaround to prevent call tips from displaying over autocompletion (thanks to [@Talv](https://github.com/Talv)).
 
