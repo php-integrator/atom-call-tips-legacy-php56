@@ -1,3 +1,6 @@
+## 1.2.3
+* Attempt to fix failed rename on apm registry.
+
 ## 1.2.2
 * Rename to legacy version.
 
